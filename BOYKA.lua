@@ -804,16 +804,16 @@ local keyboard = {
 {'معلومات السيرفر ❃'},
 {'الغاء ❃'},
 }
-send_inline_key(msg.chat_id_,bl,keyboard)
+send_inline_key(msg.chat_id_,Text,keyboard)
 else
 if not database:get(bot_id..'Start:Time'..msg.sender_user_id_) then
 local start = database:get(bot_id.."Start:Bot")  
 if start then 
-SourceBOYKAr = start
+Test = start
 else
-SourceBOYKAr = ' ❃∫ اهلا عزيزي\n ❃∫ انا بوت اسمي ' ..Namebot..'\n ❃∫ اختصاصي حمايه الكروبات\n ❃∫ من تكرار والسبام والتوجيه والخ…\n ❃∫ لتفعيلي اتبع الاخطوات…↓\n ❃∫ اضفني الي مجموعتك وقم بترقيتي ادمن واكتب كلمه { تفعيل }  ويستطيع »{ منشئ او المشرفين } بتفعيل فقط\n[ ❃∫ معرف المطور ['..UserName..']'
+Test = '⌔︙مرحبا انا بوت حماية كروبات\n⌔︙وضيفتي حماية المجموعات من السبام والتفليش والخ...\n⌔︙لتفعيل البوت اضفني الى مجموعاتك قم برفعي مشرف ثم ارسل تفعيل \n⌔︙معرف المطور ['..UserName..']'
 end 
-send(msg.chat_id_, msg.id_, SourceBOYKAr) 
+send(msg.chat_id_, msg.id_, Test) 
 end
 end
 database:setex(bot_id..'Start:Time'..msg.sender_user_id_,60,true)
@@ -868,23 +868,16 @@ elseif msg.content_.ID == 'MessageVoice' then
 sendVoice(id_user, msg.id_, msg.content_.voice_.voice_.persistent_id_)    
 Text = '⌔︙تمت ارسال البصمه اليه .. '
 end     
-if text == 'تفعيل التواصل ❃' and SudoBot(msg) then  
-if database:get(bot_id..'Tuasl:Bots') then
-database:del(bot_id..'Tuasl:Bots') 
-Text = '\n ❃∫ تم تفعيل التواصل ' 
-else
-Text = '\n ❃∫ بالتاكيد تم تفعيل التواصل '
+sendText(SUDO,Text..'\n'..'⌔︙ ~ ['..string.sub(data.first_name_,0, 40)..'](tg://user?id='..data.id_..')',0,'md') 
+end,nil);end,nil);end,nil);end,nil);end 
+if SudoBot(msg) then
+if text == 'تفعيل التواصل ⌔' then  
+database:del(bot_id..'Texting:In:Bv') 
+send(msg.chat_id_, msg.id_,'⌔︙ تم تفعيل التواصل ') 
 end
-send(msg.chat_id_, msg.id_,Text) 
-end
-if text == 'تعطيل التواصل ❃' and SudoBot(msg) then  
-if not database:get(bot_id..'Tuasl:Bots') then
-database:set(bot_id..'Tuasl:Bots',true) 
-Text = '\n ❃∫ تم تعطيل التواصل' 
-else
-Text = '\n ❃∫ بالتاكيد تم تعطيل التواصل'
-end
-send(msg.chat_id_, msg.id_,Text) 
+if text == 'تعطيل التواصل ⌔' then  
+database:set(bot_id..'Texting:In:Bv',true) 
+send(msg.chat_id_, msg.id_,'⌔︙ تم تعطيل التواصل ') 
 end
 if text == 'تفعيل البوت الخدمي ❃' and SudoBot(msg) then  
 if database:get(bot_id..'Free:Bots') then
@@ -9037,7 +9030,7 @@ local List = {
 💌|- ☆رسائلك #msgs 💌
 🎫|- ☆ايديك #id   🥇
 🎟|- ☆موقعك #stast 🌐 
-🤸‍♂|- ☆جفصاتك #edit  🌬
+??‍♂|- ☆جفصاتك #edit  🌬
 🥉|- ☆تفاعلك #auto 🚀
 🏆|- ☆مجوهراتك #game 🕹
 🌏|- ☆اشترك يحلو🌐《 قناة الكروب》
