@@ -2277,15 +2277,15 @@ Text = [[
 ≪━━━━━━𝘽𝙆━━━━━━≫
  ❃∫ ↬𝐁𝐎𝐘𝐊𝐀 𝐓𝐄𝐀𝐌
 ≪━━━━━━𝘽𝙆━━━━━━≫
- ❃∫ ↬[Channel BOYKA](t.me/NiGGa_SoUrcE) 
+ ❃∫ ↬[Channel BOYKA](t.me/BOYKA_MOD) 
 ≪━━━━━━𝘽𝙆━━━━━━≫
- ❃∫ ↬[Information](t.me/BOBBW)
+ ❃∫ ↬[Information](t.me/BOYKA_MOD)
 ≪━━━━━━𝘽𝙆━━━━━━≫
- ❃∫ ↬[DEVELOPER](t.me/CCFRR)
+ ❃∫ ↬[DEVELOPER](t.me/IIIIIX)
 ≪━━━━━━𝘽𝙆━━━━━━≫
- ❃∫ ↬[The way his inauguration](https://t.me/NiGGa_SoUrcE/365)
+ ❃∫ ↬[The way his inauguration](https://t.me/https://t.me/BOYKA_MOD/8)
 ≪━━━━━━𝘽𝙆━━━━━━≫
- ❃∫ ↬[To talk to us](t.me/rriebot)
+ ❃∫ ↬[To talk to us](t.me/FXXXBOT)
 ]]
 send(msg.chat_id_, msg.id_,Text)
 return false
