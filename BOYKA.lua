@@ -7798,24 +7798,6 @@ Text = '\n ❃∫  بالتاكيد تم تعطيل الاذاعه'
 end
 send(msg.chat_id_, msg.id_,Text) 
 end
-if text == 'تفعيل التواصل' and SudoBot(msg) then  
-if database:get(bot_id..'Tuasl:Bots') then
-database:del(bot_id..'Tuasl:Bots') 
-Text = '\n ❃∫ تم تفعيل التواصل' 
-else
-Text = '\n ❃∫ بالتاكيد تم تفعيل التواصل'
-end
-send(msg.chat_id_, msg.id_,Text) 
-end
-if text == 'تعطيل التواصل' and SudoBot(msg) then  
-if not database:get(bot_id..'Tuasl:Bots') then
-database:set(bot_id..'Tuasl:Bots',true) 
-Text = '\n ❃∫ تم تعطيل التواصل' 
-else
-Text = '\n ❃∫ بالتاكيد تم تعطيل التواصل'
-end
-send(msg.chat_id_, msg.id_,Text) 
-end
 if text == 'تفعيل البوت الخدمي' and SudoBot(msg) then  
 if AddChannel(msg.sender_user_id_) == false then
 local textchuser = database:get(bot_id..'text:ch:user')
@@ -9030,7 +9012,7 @@ local List = {
 💌|- ☆رسائلك #msgs 💌
 🎫|- ☆ايديك #id   🥇
 🎟|- ☆موقعك #stast 🌐 
-??‍♂|- ☆جفصاتك #edit  🌬
+🤸‍♂|- ☆جفصاتك #edit  🌬
 🥉|- ☆تفاعلك #auto 🚀
 🏆|- ☆مجوهراتك #game 🕹
 🌏|- ☆اشترك يحلو🌐《 قناة الكروب》
