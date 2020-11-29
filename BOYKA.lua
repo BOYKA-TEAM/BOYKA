@@ -816,22 +816,20 @@ end
 send(msg.chat_id_, msg.id_, SourceBOYKAr) 
 end
 end
-database:setex(bot_id..'Start:Time'..msg.sender_user_id_,300,true)
+database:setex(bot_id..'Start:Time'..msg.sender_user_id_,60,true)
 return false
 end
-if not SudoBot(msg) and not database:sismember(bot_id..'Ban:User_Bot',msg.sender_user_id_) and not database:get(bot_id..'Tuasl:Bots') then
-send(msg.sender_user_id_, msg.id_,' ❃∫ تم ارسال رسالتك\n ❃∫ سيتم رد في اقرب وقت')
-tdcli_function ({ID = "ForwardMessages", chat_id_ = SUDO,    from_chat_id_ = msg.sender_user_id_,    message_ids_ = {[0] = msg.id_},    disable_notification_ = 1,    from_background_ = 1 },function(arg,data) 
-tdcli_function ({ID = "GetUser",user_id_ = msg.sender_user_id_},function(arg,ta) 
-vardump(data)
-if data and data.messages_[0].content_.sticker_ then
-local Name = '['..string.sub(ta.first_name_,0, 40)..'](tg://user?id='..ta.id_..')'
-local Text = ' ❃∫ تم ارسال الملصق من ↓\n - '..Name
-sendText(SUDO,Text,0,'md')
-end 
-end,nil) 
-end,nil)
-end
+if not SudoBot(msg) and not database:sismember(bot_id..'BaN:In:User',msg.sender_user_id_) and not database:get(bot_id..'Texting:In:Bv') then
+send(msg.sender_user_id_,msg.id_,'⌔︙تمت ارسال رسالتك الى ~ ['..UserName..']')    
+tdcli_function({ID ="GetChat",chat_id_=SUDO},function(arg,chat)  
+tdcli_function({ID ="GetChat",chat_id_=msg.sender_user_id_},function(arg,chat)  
+tdcli_function({ID="ForwardMessages",chat_id_=SUDO,from_chat_id_= msg.sender_user_id_,message_ids_={[0]=msg.id_},disable_notification_=1,from_background_=1},function(arg,data) 
+tdcli_function({ID="GetUser",user_id_=msg.sender_user_id_},function(arg,ta) 
+if data and data.messages_ and data.messages_[0] ~= false and data.ID ~= "Error" then
+if data and data.messages_ and data.messages_[0].content_.sticker_ then
+sendText(SUDO,'⌔︙تم ارسال الملصق من ~ ['..string.sub(ta.first_name_,0, 40)..'](tg://user?id='..ta.id_..')',0,'md') 
+return false
+end;end;end,nil);end,nil);end,nil);end,nil);end
 if SudoBot(msg) and msg.reply_to_message_id_ ~= 0  then    
 tdcli_function({ID = "GetMessage",chat_id_ = msg.chat_id_,message_id_ = tonumber(msg.reply_to_message_id_)},function(extra, result, success) 
 if result.forward_info_.sender_user_id_ then     
@@ -839,67 +837,37 @@ id_user = result.forward_info_.sender_user_id_
 end     
 tdcli_function ({ID = "GetUser",user_id_ = id_user},function(arg,data) 
 if text == 'حظر' then
-local Name = '['..string.sub(data.first_name_,0, 40)..'](tg://user?id='..id_user..')'
-local Text = ' ❃∫ المستخدم » '..Name..'\n ❃∫ تم حظره من التواصل'
-sendText(SUDO,Text,msg.id_/2097152/0.5,'md')
-database:sadd(bot_id..'Ban:User_Bot',data.id_)  
+sendText(SUDO,'⌔︙ لشخص » ['..string.sub(data.first_name_,0, 40)..'](tg://user?id='..data.id_..')'..'\n⌔︙ تم حظره من التواصل ',msg.id_/2097152/0.5,'md')
+database:sadd(bot_id..'BaN:In:User',data.id_)  
 return false  
 end 
 if text =='الغاء الحظر' then
-local Name = '['..string.sub(data.first_name_,0, 40)..'](tg://user?id='..id_user..')'
-local Text = ' ❃∫ المستخدم » '..Name..'\n ❃∫ تم الغاء حظره من التواصل'
-sendText(SUDO,Text,msg.id_/2097152/0.5,'md')
-database:srem(bot_id..'Ban:User_Bot',data.id_)  
+sendText(SUDO,'⌔︙الشخص » ['..string.sub(data.first_name_,0, 40)..'](tg://user?id='..data.id_..')'..'\n⌔︙ تم الغاء حظره من التواصل ',msg.id_/2097152/0.5,'md')
+database:srem(bot_id..'BaN:In:User',data.id_)  
 return false  
 end 
-
 tdcli_function({ID='GetChat',chat_id_ = id_user},function(arg,dataq)
 tdcli_function ({ ID = "SendChatAction",chat_id_ = id_user, action_ = {  ID = "SendMessageTypingAction", progress_ = 100} },function(arg,ta) 
 if ta.code_ == 400 or ta.code_ == 5 then
-local BOYKA_Msg = '\n ❃∫ قام الشخص بحظر البوت'
-send(msg.chat_id_, msg.id_,BOYKA_Msg) 
+send(msg.chat_id_, msg.id_,'\n⌔︙ فشل ارسال رسالتك لان العضو قام بحظر البوت') 
 return false  
 end 
 if text then    
 send(id_user,msg.id_,text)    
-local Name = '['..string.sub(data.first_name_,0, 40)..'](tg://user?id='..id_user..')'
-local Text = ' ❃∫ المستخدم » '..Name..'\n ❃∫ تم ارسال الرساله اليه'
-sendText(SUDO,Text,msg.id_/2097152/0.5,'md')
-return false
-end    
-if msg.content_.ID == 'MessageSticker' then    
-sendSticker(id_user, msg.id_, 0, 1, nil, msg.content_.sticker_.sticker_.persistent_id_)   
-local Name = '['..string.sub(data.first_name_,0, 40)..'](tg://user?id='..id_user..')'
-local Text = ' ❃∫ المستخدم » '..Name..'\n ❃∫ تم ارسال الرساله اليه'
-sendText(SUDO,Text,msg.id_/2097152/0.5,'md')
-return false
-end      
-if msg.content_.ID == 'MessagePhoto' then    
-sendPhoto(id_user, msg.id_, 0, 1, nil,msg.content_.photo_.sizes_[0].photo_.persistent_id_,(msg.content_.caption_ or ''))    
-local Name = '['..string.sub(data.first_name_,0, 40)..'](tg://user?id='..id_user..')'
-local Text = ' ❃∫ المستخدم » '..Name..'\n ❃∫ تم ارسال الرساله اليه'
-sendText(SUDO,Text,msg.id_/2097152/0.5,'md')
-return false
+Text = '⌔︙تمت ارسال الرساله اليه .. '
+elseif msg.content_.ID == 'MessageSticker' then    
+sendSticker(id_user, msg.id_, msg.content_.sticker_.sticker_.persistent_id_)   
+Text = '⌔︙تمت ارسال الملصق اليه .. '
+elseif msg.content_.ID == 'MessagePhoto' then    
+sendPhoto(id_user, msg.id_,msg.content_.photo_.sizes_[0].photo_.persistent_id_,(msg.content_.caption_ or ''))    
+Text = '⌔︙تمت ارسال الصوره اليه .. '
+elseif msg.content_.ID == 'MessageAnimation' then    
+sendDocument(id_user, msg.id_, msg.content_.animation_.animation_.persistent_id_)    
+Text = '⌔︙تمت ارسال المتحركه اليه .. '
+elseif msg.content_.ID == 'MessageVoice' then    
+sendVoice(id_user, msg.id_, msg.content_.voice_.voice_.persistent_id_)    
+Text = '⌔︙تمت ارسال البصمه اليه .. '
 end     
-if msg.content_.ID == 'MessageAnimation' then    
-sendDocument(id_user, msg.id_, 0, 1,nil, msg.content_.animation_.animation_.persistent_id_)    
-local Name = '['..string.sub(data.first_name_,0, 40)..'](tg://user?id='..id_user..')'
-local Text = ' ❃∫ المستخدم » '..Name..'\n ❃∫ تم ارسال الرساله اليه'
-sendText(SUDO,Text,msg.id_/2097152/0.5,'md')
-return false
-end     
-if msg.content_.ID == 'MessageVoice' then    
-sendVoice(id_user, msg.id_, 0, 1, nil, msg.content_.voice_.voice_.persistent_id_)    
-local Name = '['..string.sub(data.first_name_,0, 40)..'](tg://user?id='..id_user..')'
-local Text = ' ❃∫ المستخدم » '..Name..'\n ❃∫ تم ارسال الرساله اليه'
-sendText(SUDO,Text,msg.id_/2097152/0.5,'md')
-return false
-end     
-end,nil)
-end,nil)
-end,nil)
-end,nil)
-end 
 if text == 'تفعيل التواصل ❃' and SudoBot(msg) then  
 if database:get(bot_id..'Tuasl:Bots') then
 database:del(bot_id..'Tuasl:Bots') 
@@ -2279,13 +2247,13 @@ Text = [[
 ≪━━━━━━𝘽𝙆━━━━━━≫
  ❃∫ ↬[Channel BOYKA](t.me/NiGGa_SoUrcE) 
 ≪━━━━━━𝘽𝙆━━━━━━≫
- ❃∫ ↬[Information](t.me/BOBBW)
+ ❃∫ ↬[Information](t.me/NiGGa_SoUrcE)
 ≪━━━━━━𝘽𝙆━━━━━━≫
- ❃∫ ↬[DEVELOPER](t.me/CCFRR)
+ ❃∫ ↬[DEVELOPER](t.me/IIIIIX)
 ≪━━━━━━𝘽𝙆━━━━━━≫
- ❃∫ ↬[The way his inauguration](https://t.me/NiGGa_SoUrcE/365)
+ ❃∫ ↬[The way his inauguration](https://t.me/https://t.me/BOYKA_MOD/4)
 ≪━━━━━━𝘽𝙆━━━━━━≫
- ❃∫ ↬[To talk to us](t.me/rriebot)
+ ❃∫ ↬[To talk to us](t.me/FXXXBOT)
 ]]
 send(msg.chat_id_, msg.id_,Text)
 return false
@@ -9838,7 +9806,7 @@ end
 end
 if text == "مصه" or text == "بوسه" then
 if not database:get(bot_id..'lock:add'..msg.chat_id_) then
-local texting = {"مووووووووواححح????","مابوس ولي😌😹","خدك/ج نضيف 😂","البوسه بالف حمبي 🌝💋","خلي يزحفلي وابوسه 🙊😻","كل شويه ابوسه كافي 😏","ماابوسه والله هذا زاحف🦎","محح هاي لحاته صاكه??"}
+local texting = {"مووووووووواححح????","مابوس ولي😌😹","خدك/ج نضيف 😂","البوسه بالف حمبي 🌝💋","خلي يزحفلي وابوسه 🙊??","كل شويه ابوسه كافي 😏","ماابوسه والله هذا زاحف🦎","محح هاي لحاته صاكه??"}
 send(msg.chat_id_, msg.id_, ''..texting[math.random(#texting)]..'')
 end
 end
