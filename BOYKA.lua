@@ -8133,7 +8133,7 @@ return false
 end
 tdcli_function({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub('-100',''), offset_ = 0,limit_ = 200
 },function(ta,BOYKA)
-local t = "\n❃∫ قائمة الاعضاء \n≪━━━━━━𝘽𝙆━━━━━━≫\n*"
+local t = "\n❃∫  قائمة الاعضاء \n≪━━━━━━𝘽𝙆━━━━━━≫\n*"
 x = 0
 local list = BOYKA.members_
 for k, v in pairs(list) do
@@ -8141,15 +8141,18 @@ tdcli_function({ID="GetUser",user_id_ = v.user_id_},function(arg,data)
 x = x + 1
 if data.username_ then
 t = t..""..x.."→ {[@"..data.username_.."]} \n"
+else
+tagname = data.first_name_
+tagname = tagname:gsub("]","")
+tagname = tagname:gsub("[[]","")
+t = t..""..x.."→ {["..tagname.."](tg://user?id="..v.user_id_..")} \n"
 end
 if k == 0 then
-t = t.."@BOYKA_MOD"
 send(msg.chat_id_,msg.id_,t)
 end
 end,nil)
 end
 end,nil)
-end
 end
 if text and text:match("^تاك ل (%d+)$") and Mod(msg) then
 if AddChannel(msg.sender_user_id_) == false then
@@ -8164,17 +8167,21 @@ end
 taglimit = text:match("^تاك ل (%d+)$"):gsub('تاك ل ','')
 tdcli_function({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub('-100',''), offset_ = 0,limit_ = taglimit
 },function(ta,BOYKA)
-local t = "\n❃∫ قائمة الاعضاء \n ≪━━━━━━𝘽𝙆━━━━━━≫\n*"
+local t = "\n❃∫  قائمة الاعضاء \n≪━━━━━━𝘽𝙆━━━━━━≫\n"
 x = 0
 local list = BOYKA.members_
 for k, v in pairs(list) do
 tdcli_function({ID="GetUser",user_id_ = v.user_id_},function(arg,data)
 x = x + 1
 if data.username_ then
-t = t..""..x.." → {[@"..database:get(bot_id..'user:Name'..v.user_id_).."]}\n"
+t = t..""..x.."→ {[@"..data.username_.."]} \n"
 else
-t = t..""..x.." → {"..v.user_id_.."}\n"
+tagname = data.first_name_
+tagname = tagname:gsub("]","")
+tagname = tagname:gsub("[[]","")
+t = t..""..x.."→ {["..tagname.."](tg://user?id="..v.user_id_..")} \n"
 end
+if k == 0 then
 send(msg.chat_id_,msg.id_,t)
 end
 end,nil)
