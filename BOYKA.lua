@@ -8175,40 +8175,12 @@ t = t..""..x.." → {[@"..database:get(bot_id..'user:Name'..v.user_id_).."]}\n"
 else
 t = t..""..x.." → {"..v.user_id_.."}\n"
 end
-end
 send(msg.chat_id_,msg.id_,t)
 end
 end,nil)
 end
 end,nil)
 end
-if text == "تاك للكل" and Mod(msg) then
-if AddChannel(msg.sender_user_id_) == false then
-local textchuser = database:get(bot_id..'text:ch:user')
-if textchuser then
-send(msg.chat_id_, msg.id_,'['..textchuser..']')
-else
-send(msg.chat_id_, msg.id_,'- لا تستطيع استخدام البوت يرجى الاشتراك في القناة حتى تتمكن من استخدام الاوامر \n- اشترك هنا ['..database:get(bot_id..'add:ch:username')..']')
-end
-return false
-end
-tdcli_function({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub('-100',''), offset_ = 0,limit_ = 200
-},function(ta,BOYKA)
-local t = "\nツ قائمة الاعضاء \n≪━━━━━━𝘽𝙆━━━━━━≫\n"
-x = 0
-local list = BOYKA.members_
-for k, v in pairs(list) do
-x = x + 1
-if database:get(bot_id..'user:Name'..v.user_id_) then
-t = t..""..x.." → {[@"..database:get(bot_id..'user:Name'..v.user_id_).."]}\n"
-else
-t = t..""..x.." → {"..v.user_id_.."}\n"
-end
-end
-send(msg.chat_id_,msg.id_,t)
-end,nil)
-end
-
 if text == ("تنزيل الكل") and msg.reply_to_message_id_ ~= 0 and Manager(msg) then
 if AddChannel(msg.sender_user_id_) == false then
 local textchuser = database:get(bot_id..'text:ch:user')
