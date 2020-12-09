@@ -3445,8 +3445,37 @@ t = " ❃∫ لا يوجد مطورين"
 end
 send(msg.chat_id_, msg.id_, t)
 end
-
-
+if text == "all" or text == "@all" and cleaner(msg) then
+if database:get(bot_id.."BOYKA:all:Time"..msg.chat_id_..':'..msg.sender_user_id_) then  
+return 
+send(msg.chat_id_, msg.id_,"انتظر دقيقه من فضلك")
+end
+database:setex(bot_id..'BOYKA:all:Time'..msg.chat_id_..':'..msg.sender_user_id_,300,true)
+tdcli_function({ID="GetChannelFull",channel_id_ = msg.chat_id_:gsub('-100','')},function(argg,dataa) 
+tdcli_function({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub('-100',''), offset_ = 0,limit_ = dataa.member_count_},function(ta,amir)
+x = 0
+tags = 0
+local list = amir.members_
+for k, v in pairs(list) do
+tdcli_function({ID="GetUser",user_id_ = v.user_id_},function(arg,data)
+if x == 5 or x == tags or k == 0 then
+tags = x + 5
+t = "#all"
+end
+x = x + 1
+tagname = data.first_name_
+tagname = tagname:gsub("]","")
+tagname = tagname:gsub("[[]","")
+t = t..", ["..tagname.."](tg://user?id="..v.user_id_..")"
+if x == 5 or x == tags or k == 0 then
+local Text = t:gsub('#all,','#all\n')
+sendText(msg.chat_id_,Text,0,'md')
+end
+end,nil)
+end
+end,nil)
+end,nil)
+end
 if text == 'الملفات' and SudoBot(msg) then
 t = ' ❃∫ ملفات السورس بويكا ↓\n≪━━━━━━𝘽𝙆━━━━━━≫ \n'
 i = 0
@@ -7891,64 +7920,66 @@ Text = '\n ❃∫ بالتاكيد تم تعطيل البوت الخدمي'
 end
 send(msg.chat_id_, msg.id_,Text) 
 end
-if text == 'تعطيل التنظيف' and BasicConstructor(msg) then   
-if database:get(bot_id..'Lock:delmsg'..msg.chat_id_)  then
-database:del(bot_id..'Lock:delmsg'..msg.chat_id_) 
-Text = '\n❃∫ تم تعطيل التنظيف' 
-else
-Text = '\n❃∫ بالتاكيد تم تعطيل التنظيف'
-end
-send(msg.chat_id_, msg.id_,Text) 
-end
-if text == 'تفعيل التنظيف' and BasicConstructor(msg) then  
-if not database:get(bot_id..'Lock:delmsg'..msg.chat_id_)  then
-database:set(bot_id..'Lock:delmsg'..msg.chat_id_,true) 
-Text = '\n❃∫ تم تفعيل التنظيف' 
-else
-Text = '\n❃∫ بالتاكيد تم تفعيل التنظيف'
-end
-send(msg.chat_id_, msg.id_,Text) 
-end
-if text and text:match('^تنظيف (%d+)$') and Constructor(msg) and database:get(bot_id..'Lock:delmsg'..msg.chat_id_) then                
+if text and text:match('^تنظيف (%d+)$') and Manager(msg) then
 if not database:get(bot_id..'BOYKA:Delete:Time'..msg.chat_id_..':'..msg.sender_user_id_) then           
-local Number = tonumber(text:match('^تنظيف (%d+)$')) 
-if Number > 1000 then 
-send(msg.chat_id_, msg.id_,'❃∫ لا تستطيع تنضيف اكثر من *~ 1000* رساله') 
+local num = tonumber(text:match('^تنظيف (%d+)$')) 
+if AddChannel(msg.sender_user_id_) == false then
+local textchuser = database:get(bot_id..'text:ch:user')
+if textchuser then
+send(msg.chat_id_, msg.id_,'['..textchuser..']')
+else
+send(msg.chat_id_, msg.id_,' ❃∫ لا تستطيع استخدام البوت \n  ❃∫ يرجى الاشتراك بالقناه اولا \n  ❃∫ اشترك هنا ['..database:get(bot_id..'add:ch:username')..']')
+end
+return false
+end
+if num > 1000 then 
+send(msg.chat_id_, msg.id_,'❃∫تستطيع التنظيف 1000 رساله كحد اقصى') 
 return false  
 end  
-local Message = msg.id_
-for i=1,tonumber(Number) do
-DeleteMessage(msg.chat_id_,{[0]=Message})
-Message = Message - 1048576
+local msgm = msg.id_
+for i=1,tonumber(num) do
+DeleteMessage(msg.chat_id_, {[0] = msgm})
+msgm = msgm - 1048576
 end
-send(msg.chat_id_, msg.id_,'• تم تنظيف *~ '..Number..'* رساله .')  
+send(msg.chat_id_,msg.id_,'❃∫ تم حذف {'..num..'}')  
 database:setex(bot_id..'BOYKA:Delete:Time'..msg.chat_id_..':'..msg.sender_user_id_,300,true)
 end
 end
-if text == "تنظيف الميديا" and Manager(msg) then
-msgm = {[0]=msg.id_}
-local Message = msg.id_
-for i=1,100 do
-Message = Message - 1048576
-msgm[i] = Message
+if (msg.content_.animation_) or (msg.content_.photo_) or (msg.content_.video_) or (msg.content_.document) or (msg.content_.sticker_) or (msg.content_.voice_) or (msg.content_.audio_) and msg.reply_to_message_id_ == 0 then      
+database:sadd(bot_id.."BOYKA:allM"..msg.chat_id_, msg.id_)
 end
-tdcli_function({ID = "GetMessages",chat_id_ = msg.chat_id_,message_ids_ = msgm},function(arg,data)
-new = 0
-msgm2 = {}
-for i=0 ,data.total_count_ do
-if data.messages_[i] and data.messages_[i].content_ and data.messages_[i].content_.ID ~= "MessageText" then
-msgm2[new] = data.messages_[i].id_
-new = new + 1
+if text == ("امسح") and cleaner(msg) then  
+local list = database:smembers(bot_id.."BOYKA:allM"..msg.chat_id_)
+for k,v in pairs(list) do
+local Message = v
+if Message then
+t = "❃∫ تم مسح "..k.." من الوسائط الموجوده"
+DeleteMessage(msg.chat_id_,{[0]=Message})
+database:del(bot_id.."BOYKA:allM"..msg.chat_id_)
 end
 end
-DeleteMessage(msg.chat_id_,msgm2)
-end,nil)  
-send(msg.chat_id_, msg.id_,"❃∫ تم تنظيف جميع الميديا")
+if #list == 0 then
+t = "❃∫ لا يوجد ميديا في المجموعه"
+end
+send(msg.chat_id_, msg.id_, t)
+end
+if text == ("عدد الميديا") and cleaner(msg) then  
+local num = database:smembers(bot_id.."BOYKA:allM"..msg.chat_id_)
+for k,v in pairs(num) do
+local numl = v
+if numl then
+l = "❃∫ عدد الميديا الموجود هو "..k
+end
+end
+if #num == 0 then
+l = "❃∫ لا يوجد ميديا في المجموعه"
+end
+send(msg.chat_id_, msg.id_, l)
 end
 if text == "تنظيف التعديل" and Manager(msg) then
 Msgs = {[0]=msg.id_}
 local Message = msg.id_
-for i=1,100 do
+for i=1,500 do
 Message = Message - 1048576
 Msgs[i] = Message
 end
@@ -8100,35 +8131,58 @@ send(msg.chat_id_, msg.id_,' ❃∫ لا تستطيع استخدام البوت 
 end
 return false
 end
-if database:get(bot_id.."chat:tagall"..msg.chat_id_) then  return send(msg.chat_id_, msg.id_,"يمكن عمل تاك للكل كل *10* دقائق ❃∫ ") end
-database:setex(bot_id..'chat:tagall'..msg.chat_id_,600,true)
-tdcli_function({ID="GetChannelFull",channel_id_ = msg.chat_id_:gsub('-100','')},function(argg,dataa) 
-tdcli_function({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub('-100',''), offset_ = 0,limit_ = dataa.member_count_
+tdcli_function({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub('-100',''), offset_ = 0,limit_ = 200
 },function(ta,BOYKA)
+local t = "\n❃∫ قائمة الاعضاء \n≪━━━━━━𝘽𝙆━━━━━━≫\n*"
 x = 0
-tags = 0
 local list = BOYKA.members_
 for k, v in pairs(list) do
 tdcli_function({ID="GetUser",user_id_ = v.user_id_},function(arg,data)
-if x == 5 or x == tags or k == 0 then
-tags = x + 5
-t = "#all"
-end
 x = x + 1
-tagname = data.first_name_
-tagname = tagname:gsub("]","")
-tagname = tagname:gsub("[[]","")
-t = t..", ["..tagname.."](tg://user?id="..v.user_id_..")"
-if x == 5 or x == tags or k == 0 then
-local Text = t:gsub('#all,','#all\n')
-sendText(msg.chat_id_,Text,msg.id_/2097152/0.5,'md')
+if data.username_ then
+t = t..""..x.."→ {[@"..data.username_.."]} \n"
+end
+if k == 0 then
+t = t.."@BOYKA_MOD"
+send(msg.chat_id_,msg.id_,t)
 end
 end,nil)
 end
 end,nil)
+end
+end
+if text and text:match("^تاك ل (%d+)$") and Mod(msg) then
+if AddChannel(msg.sender_user_id_) == false then
+local textchuser = database:get(bot_id..'text:ch:user')
+if textchuser then
+send(msg.chat_id_, msg.id_,'['..textchuser..']')
+else
+send(msg.chat_id_, msg.id_,' ❃∫ لا تستطيع استخدام البوت \n  ❃∫ يرجى الاشتراك بالقناه اولا \n  ❃∫ اشترك هنا ['..database:get(bot_id..'add:ch:username')..']')
+end
+return false
+end
+taglimit = text:match("^تاك ل (%d+)$"):gsub('تاك ل ','')
+tdcli_function({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub('-100',''), offset_ = 0,limit_ = taglimit
+},function(ta,BOYKA)
+local t = "\n❃∫ قائمة الاعضاء \n ≪━━━━━━𝘽𝙆━━━━━━≫\n*"
+x = 0
+local list = BOYKA.members_
+for k, v in pairs(list) do
+tdcli_function({ID="GetUser",user_id_ = v.user_id_},function(arg,data)
+x = x + 1
+if data.username_ then
+t = t..""..x.." → {[@"..database:get(bot_id..'user:Name'..v.user_id_).."]}\n"
+else
+t = t..""..x.." → {"..v.user_id_.."}\n"
+end
+end
+send(msg.chat_id_,msg.id_,t)
+end
 end,nil)
 end
-if text == "تاك" and Mod(msg) then
+end,nil)
+end
+if text == "تاك للكل" and Mod(msg) then
 if AddChannel(msg.sender_user_id_) == false then
 local textchuser = database:get(bot_id..'text:ch:user')
 if textchuser then
