@@ -8133,7 +8133,7 @@ return false
 end
 tdcli_function({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub('-100',''), offset_ = 0,limit_ = 200
 },function(ta,BOYKA)
-local t = "\n❃∫  قائمة الاعضاء \n≪━━━━━━𝘽𝙆━━━━━━≫\n*"
+local t = "\nツ قائمة الاعضاء \n≪━━━━━━𝘽𝙆━━━━━━≫\n"
 x = 0
 local list = BOYKA.members_
 for k, v in pairs(list) do
@@ -8154,39 +8154,7 @@ end,nil)
 end
 end,nil)
 end
-if text == ("تاك") and Mod(msg) then
-if AddChannel(msg.sender_user_id_) == false then
-local textchuser = database:get(bot_id..'text:ch:user')
-if textchuser then
-send(msg.chat_id_, msg.id_,'['..textchuser..']')
-else
-send(msg.chat_id_, msg.id_,'•  𝑾𝒆𝒍𝒄𝒐𝒎𝒆 𝒏𝒊𝒈𝒈𝒂 •\n• لايمكنك استخدام البوت •\n• عليك الاشتراك في القناة •\n• اشترك اولا ['..database:get(bot_id..'add:ch:username')..'•]')
-end
-return false
-end
-tdcli_function({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub('-100',''), offset_ = 0,limit_ = 200
-},function(ta,MODEDEV)
-local t = "\n*• قائمة الاعضاء \n *•●○●○●○●•ٴ*\n*"
-x = 0
-local list = MODEDEV.members_
-for k, v in pairs(list) do
-tdcli_function({ID="GetUser",user_id_ = v.user_id_},function(arg,data)
-x = x + 1
-if data.username_ then
-t = t.."*︙"..x.."︙l>* {[@"..data.username_.."]} \n"
-else
-tagname = data.first_name_
-tagname = tagname:gsub("]","")
-tagname = tagname:gsub("[[]","")
-t = t.."*︙"..x.."︙l>* {["..tagname.."](tg://user?id="..v.user_id_..")} \n"
-end
-if k == 0 then
-send(msg.chat_id_,msg.id_,t)
-end
-end,nil)
-end
-end,nil)
-end
+
 if text and text:match("^تاك ل (%d+)$") and Mod(msg) then
 if AddChannel(msg.sender_user_id_) == false then
 local textchuser = database:get(bot_id..'text:ch:user')
